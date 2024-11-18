@@ -24,10 +24,10 @@ namespace c_project_mastermind_1_12001591
         private int attempts;
         public MainWindow()
         {
-            
+
             InitializeComponent();
 
-            
+
             Title = $"Poging {attempts}";
             StringBuilder sb = new StringBuilder();
 
@@ -37,7 +37,11 @@ namespace c_project_mastermind_1_12001591
             color3 = RandomColor(rnd);
             color4 = RandomColor(rnd);
 
-           // Title = $"MasterMind({color1},{color2},{color3},{color4})";
+            TimeSpan timeElapsed = DateTime.Now.Subtract(startTime);
+
+          
+
+            // Title = $"MasterMind({color1},{color2},{color3},{color4})";
         }
         private string RandomColor(Random rnd)
         {
@@ -139,7 +143,7 @@ namespace c_project_mastermind_1_12001591
             timerTextBox.Text = interval.ToString("ss\\:fff");
         }
 
-        private void StartCountDown(object sender, RoutedEventArgs e)
+        private void StartCountdown(object sender, RoutedEventArgs e)
         {
             
             timer.Interval = TimeSpan.FromMilliseconds(1);
@@ -147,14 +151,28 @@ namespace c_project_mastermind_1_12001591
             timer.Start();
             startTime = DateTime.Now;
         }
-        
+
+        private int StopCountdown(int timerLimit)
+        {
+            TimeSpan timeElapsed = DateTime.Now.Subtract(startTime);
+            if (timeElapsed.TotalSeconds > 10)
+            {
+                timer.Stop();
+                return timerLimit + 1;
+            }
+            
+        }
+
         private void valideButton_Click(object sender, RoutedEventArgs e)
         {
             timer.Interval = TimeSpan.FromMilliseconds(1);
             timer.Tick += Timer_Tick;
             timer.Start();
             startTime = DateTime.Now;
-            
+            TimeSpan timeElapsed = DateTime.Now.Subtract(startTime);
+           
+           
+           
 
             int attempts = +1;
             Title = $"Poging {attempts}";
@@ -163,6 +181,9 @@ namespace c_project_mastermind_1_12001591
             string comboBox3Color = (comboBox3.SelectedValue as ComboBoxItem)?.Content.ToString();
             string comboBox4Color = (comboBox4.SelectedValue as ComboBoxItem)?.Content.ToString();
             CompareCodeWithLabel(comboBox1Color, comboBox2Color, comboBox3Color, comboBox4Color);
+
+            
+
         }
        
         private void SameColor(Label label, string ChosenColor, string correctColor, int place)
