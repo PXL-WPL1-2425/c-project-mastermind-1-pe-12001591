@@ -10,6 +10,7 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace c_project_mastermind_1_12001591
 {
@@ -18,6 +19,7 @@ namespace c_project_mastermind_1_12001591
     /// </summary>
     public partial class MainWindow : Window
     {
+        private DispatcherTimer timer = new DispatcherTimer();
         private string color1, color2, color3, color4;
         private int attempts;
         public MainWindow()
@@ -108,6 +110,9 @@ namespace c_project_mastermind_1_12001591
             }
 
         }
+
+       
+
         private void ComboBox3Color(object sender, SelectionChangedEventArgs e)
         {
             if (comboBox3.SelectedItem != null)
@@ -126,11 +131,31 @@ namespace c_project_mastermind_1_12001591
             }
 
         }
+        DateTime startTime;
+        private void Timer_Tick(object? sender, EventArgs e)
+        {
+            TimeSpan interval = DateTime.Now.Subtract(startTime);
 
+            timerTextBox.Text = interval.ToString("ss\\:fff");
+        }
+
+        private void StartCountDown(object sender, RoutedEventArgs e)
+        {
+            
+            timer.Interval = TimeSpan.FromMilliseconds(1);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+            startTime = DateTime.Now;
+        }
+        
         private void valideButton_Click(object sender, RoutedEventArgs e)
         {
-          
+            timer.Interval = TimeSpan.FromMilliseconds(1);
+            timer.Tick += Timer_Tick;
+            timer.Start();
+            startTime = DateTime.Now;
             
+
             int attempts = +1;
             Title = $"Poging {attempts}";
             string comboBox1Color = (comboBox1.SelectedValue as ComboBoxItem)?.Content.ToString();
@@ -139,6 +164,7 @@ namespace c_project_mastermind_1_12001591
             string comboBox4Color = (comboBox4.SelectedValue as ComboBoxItem)?.Content.ToString();
             CompareCodeWithLabel(comboBox1Color, comboBox2Color, comboBox3Color, comboBox4Color);
         }
+       
         private void SameColor(Label label, string ChosenColor, string correctColor, int place)
         {
             if (ChosenColor == correctColor)
